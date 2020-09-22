@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'Mesas';
+  src:  url('fonts/Mesas.eot?utoj0g');
+  src:  url('fonts/Mesas.eot?utoj0g#iefix') format('embedded-opentype'),
+    url('fonts/Mesas.ttf?utoj0g') format('truetype'),
+    url('fonts/Mesas.woff?utoj0g') format('woff'),
+    url('fonts/Mesas.svg?utoj0g#Mesas') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="mes-"], [class*=" mes-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Mesas' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mes-Mesa-circular:before {
+  content: "\e901";
+}
+.mes-Mesa:before {
+  content: "\e900";
+}

@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Reservaciones</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fuentes/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar fixed-top">
+        <a href="index.html"> <img src="img/logo.png" width="70" height="50" alt="" loading="lazy"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Menú</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Reservaciones
+            </a>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item text-white" href="reservacion-mesa.html">Reservar Mesa</a>
+                        <a class="dropdown-item text-white" href="reservacion-area.html">Reservar Área</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="pagina-de-informacion.html">Información</a>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="acerca-de-nosotros.html">Acerca de</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="position-relative">
+        <h2 class="text-center text-white comienzo-pagina" style="font-size: 3.5rem;">Reserva Tu Mesa</h2>
+        <p class="lead text-center text-white">Presiona cualquiera de las mesas para reservar tu mesa y poder disfrutar de tu corte de carne</p>
+        <div class="container-sm overflow-auto ">
+            <div class="reservaciones " id="reservacion">
+                <i class="mes-Mesa">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa-circular ">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa-circular">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa-circular">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa-circular">
+                    <p class="reserva"></p>
+                </i>
+                <i class="mes-Mesa">
+                    <p class="reserva"></p>
+                </i>
+
+
+            </div>
+
+        </div>
+        <div class="position-absolute zoom" id="zoom">
+            <i class="fas fa-search-plus text-white"></i>
+            <i class="fas fa-search-minus text-white"></i>
+        </div>
+
+
+
+
+        <form action="" class="seccion container-sm">
+            <fieldset>
+                <legend class="text-white text-center">Información de Reserva</legend>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="name" class="text-white d-block">Nombre Completo: </label>
+                        <input class="form-control" type="text" id="name" placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="email" class="text-white d-block" id="exampleInputEmail1">E-mail: </label>
+                        <input type="email" class="form-control" id="exampleInputEmail1 email" placeholder="Tu correo" required>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="telefono" class="text-white d-block">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" placeholder="Tu teléfono" required>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="fecha" class="text-white d-block">Fecha</label>
+                        <input type="date" class="form-control" id="fecha" required>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="hora" class="text-white d-block">Hora: </label>
+                        <input type="time" class="form-control" min="12:00" max="20:00" id="hora" required>
+                    </div>
+                </div>
+                <div id="error"></div>
+
+                <div class="contenido boton">
+                    <button class="button" id="registrado" type="submit">Reservar</button>
+                </div>
+
+
+            </fieldset>
+
+        </form>
+    </section>
+
+
+
+    <!--Footer-->
+    <footer>
+        <div class="footer d-md-flex justify-content-md-around align-items-md-center">
+            <img src="img/logo.png " width="30% " alt=" " loading="lazy ">
+            <div class="text-white text-center align-items-md-center">
+                <h3 class="h3 ">Contactos</h3>
+                <div>
+                    <p class="lead ">Correo: <span class="font-weight-bold ">LomoAbuela@gmail.com</span></p>
+                    <p class="lead ">Teléfono: <span class="font-weight-bold ">0000-0000</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+<script src="https://kit.fontawesome.com/c556beb5fe.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js " integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj " crossorigin="anonymous "></script>
+<script type="text/javascript " src="js/bootstrap.min.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js " integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN " crossorigin="anonymous "></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js " integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV " crossorigin="anonymous "></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="js/main.js"></script>
+
+</html>
