@@ -10,8 +10,11 @@ const addplatillo = document.querySelector('.platillo');
 const addbebida = document.querySelector('.bebida');
 const contenidoplatillo = document.querySelector('.adminPlatillos');
 const contenidobebida = document.querySelector('.adminBebidas');
+const contenidoMesa = document.querySelector('.adminMesas');
+const contenidoArea = document.querySelector('.adminAreas');
 let estadoArea = [];
 let estadoMesa = [];
+
 
 $(function() {
     $('.tooltip-carousel').popover();
@@ -52,12 +55,12 @@ if (filename() === "reservacion-mesa.html") {
     //Aumentar o disminuir Zoom
     document.querySelector('#zoom').addEventListener('click', cambiarZoom);
 
-    //Cargar LocalStorage
+    //Cargar API
     document.addEventListener('DOMContentLoaded', () => {
-        estadoMesa = JSON.parse(localStorage.getItem('mesa')) || [];
-
-
-        sincronizarMesa();
+        const url = 'https://restauranteappudb.herokuapp.com/api/mesa';
+        fetch(url)
+            .then(resultado => resultado.json())
+            .then(respuesta => sincronizarMesa(respuesta));
     });
 }
 //eventos para reservar area
@@ -73,10 +76,11 @@ if (filename() === "reservacion-area.html") {
 
     //Cargar LocalStorage
     document.addEventListener('DOMContentLoaded', () => {
-        estadoArea = JSON.parse(localStorage.getItem('area')) || [];
+        const url = 'https://restauranteappudb.herokuapp.com/api/area';
+        fetch(url)
+            .then(resultado => resultado.json())
+            .then(respuesta => sincronizarArea(respuesta));
 
-
-        sincronizarArea();
     });
 }
 
@@ -98,6 +102,12 @@ if (filename() === "admin.html") {
         window.location.href = 'formulario.html?id=0&t=bebida';
     });
 }
+
+if (filename() === "admin-reserva.html") {
+    document.addEventListener('DOMContentLoaded', () => {
+        obtenerDatosMesas();
+    });
+}
 let archivo = filename();
 if (archivo.includes("formulario.html")) {
     document.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +127,38 @@ function filename() {
     var posicionUltimaBarra = rutaAbsoluta.lastIndexOf("/");
     var rutaRelativa = rutaAbsoluta.substring(posicionUltimaBarra + "/".length, rutaAbsoluta.length);
     return rutaRelativa;
+}
+
+function obtenerDatosMesas() {
+    const url = "https://restauranteappudb.herokuapp.com/api/mesa";
+    const urla = "https://restauranteappudb.herokuapp.com/api/area";
+    fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            }
+        })
+        .then(respuesta => respuesta.json())
+        .then(resultado => mostrarAdminMesas(resultado));
+
+    fetch(urla, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            }
+        })
+        .then(respuesta => respuesta.json())
+        .then(resultado => mostrarAdminArea(resultado));
 }
 
 function obtenerDatos() {
@@ -237,7 +279,6 @@ function mostrarAdmin(datos) {
 }
 
 function mostrarAdminBebidas(datos) {
-    let html = '';
     limpiarHTMLBebidas();
     datos.forEach(bebida => {
         const { name, image, id } = bebida;
@@ -285,6 +326,206 @@ function mostrarAdminBebidas(datos) {
     });
 }
 
+function mostrarAdminMesas(mesas) {
+    limpiarMesas();
+    mesas.forEach(mesa => {
+        const { id, ocupado, hora, nombre, correo, fecha } = mesa;
+        const divContenido = document.createElement('div');
+        const divCarta = document.createElement('div');
+        const divImagen = document.createElement('div');
+        const divCuerpo = document.createElement('div');
+        const img = document.createElement('img');
+        const titulo = document.createElement('h4');
+        const mesaId = document.createElement('p');
+        const usuario = document.createElement('p');
+        const email = document.createElement('p');
+        const time = document.createElement('p');
+        const date = document.createElement('p');
+        const btnEliminar = document.createElement('button');
+
+        //Añadir clases y atriutos
+        divContenido.classList.add('col-lg-3', 'col-md-6', 'mb-4');
+        divCarta.classList.add('card');
+        divImagen.classList.add('view', 'overlay', 'hm-white-slight');
+        divCuerpo.classList.add('card-body', 'text-center');
+        img.classList.add('img-fluid');
+        img.src = 'img/logo.png';
+        btnEliminar.classList.add('btn', 'btn-md', 'btn-danger');
+        btnEliminar.innerHTML = `Eliminar Reserva <i class="fas fa-trash"></i>`
+
+        if (ocupado) {
+            titulo.classList.add('card-title', 'text-danger');
+            titulo.innerHTML = `<strong>Ocupado</strong>`;
+        } else {
+            titulo.classList.add('card-title', 'text-success');
+            titulo.innerHTML = `<strong>Disponible</strong>`;
+        }
+        mesaId.classList.add('card-text');
+        mesaId.innerHTML = `Mesa ID: <span class="font-weight-bold">${id}</span>`;
+
+        usuario.classList.add('card-text');
+        usuario.innerHTML = `Nombre: <span class="font-weight-bold">${nombre}</span>`;
+
+        email.classList.add('card-text');
+        email.innerHTML = `Correo: <span class="font-weight-bold">${correo}</span>`;
+
+        time.classList.add('card-text');
+        time.innerHTML = `Hora: <span class="font-weight-bold">${hora}</span>`;
+
+        date.classList.add('card-text');
+        date.innerHTML = `Fecha: <span class="font-weight-bold">${fecha}</span>`;
+
+        //Añadir al DOM
+        divCuerpo.appendChild(titulo);
+        divCuerpo.appendChild(mesaId);
+        if (ocupado) {
+
+            divCuerpo.appendChild(usuario);
+            divCuerpo.appendChild(email);
+            divCuerpo.appendChild(time);
+            divCuerpo.appendChild(date);
+            divCuerpo.appendChild(btnEliminar);
+        }
+
+        divImagen.appendChild(img);
+        divCarta.appendChild(divImagen);
+        divCarta.appendChild(divCuerpo);
+        divContenido.appendChild(divCarta);
+        contenidoMesa.appendChild(divContenido);
+        //Agregar funciones
+        btnEliminar.onclick = () => {
+            borrarReservaMesa(id, mesa);
+        }
+    })
+}
+
+function mostrarAdminArea(areas) {
+    limpiarAreas();
+    areas.forEach(area => {
+        const { id, tipo, ocupado, hora, nombre, correo, fecha } = area;
+        const divContenido = document.createElement('div');
+        const divCarta = document.createElement('div');
+        const divImagen = document.createElement('div');
+        const divCuerpo = document.createElement('div');
+        const img = document.createElement('img');
+        const titulo = document.createElement('h4');
+        const mesaId = document.createElement('p');
+        const usuario = document.createElement('p');
+        const email = document.createElement('p');
+        const time = document.createElement('p');
+        const date = document.createElement('p');
+        const btnEliminar = document.createElement('button');
+
+        //Añadir clases y atriutos
+        divContenido.classList.add('col-lg-4', 'col-md-6', 'mb-4');
+        divCarta.classList.add('card');
+        divImagen.classList.add('view', 'overlay', 'hm-white-slight');
+        divCuerpo.classList.add('card-body', 'text-center');
+        img.classList.add('img-fluid');
+        img.src = 'img/logo.png';
+        btnEliminar.classList.add('btn', 'btn-md', 'btn-danger');
+        btnEliminar.innerHTML = `Eliminar Reserva <i class="fas fa-trash"></i>`
+
+        if (ocupado) {
+            titulo.classList.add('card-title', 'text-danger');
+            titulo.innerHTML = `<strong>Ocupado</strong>`;
+        } else {
+            titulo.classList.add('card-title', 'text-success');
+            titulo.innerHTML = `<strong>Disponible</strong>`;
+        }
+        mesaId.classList.add('card-text');
+        mesaId.innerHTML = `Area ID: <span class="font-weight-bold">${id}</span>`;
+
+        usuario.classList.add('card-text');
+        usuario.innerHTML = `Nombre: <span class="font-weight-bold">${nombre}</span>`;
+
+        email.classList.add('card-text');
+        email.innerHTML = `Correo: <span class="font-weight-bold">${correo}</span>`;
+
+        time.classList.add('card-text');
+        time.innerHTML = `Hora: <span class="font-weight-bold">${hora}</span>`;
+
+        date.classList.add('card-text');
+        date.innerHTML = `Fecha: <span class="font-weight-bold">${fecha}</span>`;
+
+        //Añadir al DOM
+        divCuerpo.appendChild(titulo);
+        divCuerpo.appendChild(mesaId);
+        if (ocupado) {
+
+            divCuerpo.appendChild(usuario);
+            divCuerpo.appendChild(email);
+            divCuerpo.appendChild(time);
+            divCuerpo.appendChild(date);
+            divCuerpo.appendChild(btnEliminar);
+        }
+
+        divImagen.appendChild(img);
+        divCarta.appendChild(divImagen);
+        divCarta.appendChild(divCuerpo);
+        divContenido.appendChild(divCarta);
+        contenidoArea.appendChild(divContenido);
+        //Agregar funciones
+        btnEliminar.onclick = () => {
+            borrarReservaArea(id, area);
+        }
+    })
+}
+
+
+function borrarReservaMesa(id, mesa) {
+    mesa.estado = "activo";
+    mesa.tipo = "reserva";
+    mesa.ocupado = false;
+    mesa.correo = "";
+    mesa.hora = "";
+    mesa.nombre = "";
+    mesa.fecha = "";
+    const url = `https://restauranteappudb.herokuapp.com/api/mesa/${id}`
+    fetch(url, {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            },
+            body: JSON.stringify(mesa)
+        })
+        .then(respuesta => respuesta.json())
+        .then(resultado => mostrarAdminMesas(resultado));
+}
+
+function borrarReservaArea(id, area) {
+    area.icono = "fa-door-open";
+    area.estado = "activo";
+    area.tipo = "reserva";
+    area.ocupado = false;
+    area.correo = "";
+    area.hora = "";
+    area.nombre = "";
+    area.fecha = "";
+    const url = `https://restauranteappudb.herokuapp.com/api/area/${id}`
+    fetch(url, {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            },
+            body: JSON.stringify(area)
+        })
+        .then(respuesta => respuesta.json())
+        .then(resultado => mostrarAdminArea(resultado));
+}
+
+
+
 function mostrarHTMLBebidas(datos) {
     const contenidoBeb = document.querySelector('div .bebidas');
     let html = '';
@@ -318,12 +559,12 @@ function cambiarEstado(e) {
                     contadore++;
                 }
             }
-            if (contadore === 0) {
+            if (contadore === 0 && !e.target.classList.contains('reservado')) {
                 e.target.classList.add('activo');
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'No puede reservar mas de una mesa',
+                    title: 'No puede reservar mas de una mesa ni reservar una ocupada',
                     text: 'Error'
                 });
             }
@@ -397,9 +638,16 @@ function reservarMesa(e) {
                         reserva.children[x].classList.add('reservado');
                         reserva.children[x].children[0].classList.remove('reserva');
                         reserva.children[x].children[0].classList.add('ocupado');
-
-                        estadoMesa = [...estadoMesa, [id, 'activo', 'reservado', 'reserva', 'ocupado']];
-                        sincronizarStorage('mesa', estadoMesa);
+                        const objMesas = {
+                            estado: 'reservado',
+                            tipo: 'ocupado',
+                            ocupado: true,
+                            hora: hora.value,
+                            nombre: nombre.value,
+                            correo: email.value,
+                            fecha: inputFecha.value
+                        }
+                        sincronizarStorage('mesa', objMesas, id);
                     }
                 }
 
@@ -441,8 +689,17 @@ function reservarArea(e) {
                         area.children[x].classList.add('fa-door-closed');
                         area.children[x].children[0].classList.remove('reserva');
                         area.children[x].children[0].classList.add('ocupado');
-                        estadoArea = [...estadoArea, [id, 'fa-door-open', 'fa-door-closed', 'activo', 'reservado', 'reserva', 'ocupado']];
-                        sincronizarStorage('area', estadoArea);
+                        objAreas = {
+                            icono: "fa-door-closed",
+                            estado: 'reservado',
+                            tipo: 'ocupado',
+                            ocupado: true,
+                            hora: hora.value,
+                            nombre: nombre.value,
+                            correo: email.value,
+                            fecha: inputFecha.value
+                        }
+                        sincronizarStorage('area', objAreas, id);
                     }
                 };
 
@@ -528,38 +785,64 @@ function cambiarZoom(e) {
 
 }
 
-function sincronizarStorage(tipo, estado) {
-    localStorage.setItem(tipo, JSON.stringify(estado));
-}
-
-function sincronizarArea() {
-    let iconos = Array.from(area.children);
-    if (estadoArea) {
-        estadoArea.forEach(estado => {
-            iconos.find(icono => {
-                if (icono.getAttribute('data-id') === estado[0]) {
-                    icono.classList.remove(estado[1]);
-                    icono.classList.remove(estado[3]);
-                    icono.children[0].classList.remove(estado[5]);
-                    icono.classList.add(estado[2]);
-                    icono.classList.add(estado[4]);
-                    icono.children[0].classList.add(estado[6]);
-                }
-            });
+function sincronizarStorage(tipo, obj, id) {
+    if (tipo === 'mesa') {
+        const url = `https://restauranteappudb.herokuapp.com/api/mesa/${id}`
+        fetch(url, {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            },
+            body: JSON.stringify(obj)
+        });
+    } else if (tipo === 'area') {
+        const url = `https://restauranteappudb.herokuapp.com/api/area/${id}`
+        fetch(url, {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Access-Control-Allow-Origin': '*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive'
+            },
+            body: JSON.stringify(obj)
         });
     }
-
 }
 
-function sincronizarMesa() {
+function sincronizarArea(areas) {
+    let iconos = Array.from(area.children);
+    areas.forEach(area => {
+        const { id, estado, tipo, ocupado, icono } = area;
+        iconos.forEach(zona => {
+            if (zona.getAttribute('data-id') == id && ocupado) {
+                zona.children[0].classList.remove('reserva');
+                zona.classList.add(estado);
+                zona.children[0].classList.add(tipo);
+                zona.classList.add(icono);
+                zona.classList.remove('fa-door-open');
+            }
+        });
+
+    });
+}
+
+function sincronizarMesa(mesas) {
     let iconos = Array.from(reserva.children);
-    estadoMesa.forEach(estado => {
+    mesas.forEach(mesa => {
+        const { id, estado, tipo, ocupado } = mesa;
         iconos.forEach(icono => {
-            if (icono.getAttribute('data-id') === estado[0]) {
-                icono.classList.remove(estado[1]);
-                icono.children[0].classList.remove(estado[3]);
-                icono.classList.add(estado[2]);
-                icono.children[0].classList.add(estado[4]);
+            if (icono.getAttribute('data-id') == id && ocupado) {
+                icono.children[0].classList.remove('reserva');
+                icono.classList.add(estado);
+                icono.children[0].classList.add(tipo);
             }
         });
     });
@@ -726,5 +1009,17 @@ function limpiarHTMLBebidas() {
 
     while (contenidobebida.firstChild) {
         contenidobebida.removeChild(contenidobebida.firstChild);
+    }
+}
+
+function limpiarMesas() {
+    while (contenidoMesa.firstChild) {
+        contenidoMesa.removeChild(contenidoMesa.firstChild);
+    }
+}
+
+function limpiarAreas() {
+    while (contenidoArea.firstChild) {
+        contenidoArea.removeChild(contenidoArea.firstChild);
     }
 }
