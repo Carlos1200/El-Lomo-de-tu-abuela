@@ -935,7 +935,7 @@ function borrarPlatillo(id) {
 
 function obtenerDatosForm() {
     let valores = window.location.search;
-    let id = valores.substring(4, 5);
+    let id = parseInt(valores.substring(4, 5));
     let tipo = valores.substring(8);
     if (id > 0) {
         if (tipo === "platillo") {
