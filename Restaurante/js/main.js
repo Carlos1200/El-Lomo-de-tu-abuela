@@ -7,6 +7,7 @@ const reserva = document.querySelector('#reservacion');
 const area = document.querySelector('#areas');
 const inputFecha = document.querySelector('input[type="date"]');
 const addplatillo = document.querySelector('.platillo');
+const carusel = document.querySelector('.carousel-inner');
 const addbebida = document.querySelector('.bebida');
 const contenidoplatillo = document.querySelector('.adminPlatillos');
 const contenidobebida = document.querySelector('.adminBebidas');
@@ -44,6 +45,24 @@ $(function() {
 
 
 //EVENT LISTEDERS
+if (filename() === "index.html") {
+    document.addEventListener('DOMContentLoaded', () => {
+        const url = 'https://restauranteappudb.herokuapp.com/api/menu';
+        fetch(url, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Access-Control-Allow-Origin': '*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Connection': 'keep-alive'
+                }
+            })
+            .then(respuesta => respuesta.json())
+            .then(resultado => llenarCarrusel(resultado));
+    })
+}
 //eventos para reservar mesa
 if (filename() === "reservacion-mesa.html") {
     //Cambiar color de reservacion
@@ -127,6 +146,31 @@ function filename() {
     var posicionUltimaBarra = rutaAbsoluta.lastIndexOf("/");
     var rutaRelativa = rutaAbsoluta.substring(posicionUltimaBarra + "/".length, rutaAbsoluta.length);
     return rutaRelativa;
+}
+
+function llenarCarrusel(datos) {
+    let html = '';
+    let activo = '';
+    let contador = 0;
+    datos.forEach(menu => {
+        const { name, description, image } = menu;
+        if (contador === 0) {
+            activo = 'active';
+            contador++;
+        } else {
+            activo = '';
+        }
+        html += `
+        <div class="carousel-item ${activo}">
+            <img src="${image}" class="d-block w-100" style="max-height: 600px;" alt="Especialidad Corte">
+            <div class="carousel-caption d-none d-md-block">
+                <h5 style="font-size: 2.5rem;">${name}</h5>
+                <p>${description}</p>
+            </div>
+        </div>
+        `;
+    });
+    carusel.innerHTML = html;
 }
 
 function obtenerDatosMesas() {
